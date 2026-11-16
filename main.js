@@ -219,13 +219,13 @@ if (nav && toggle) {
   function draw() {
     ctx.clearRect(0, 0, W, H);
     for (const d of dots) {
-      const a = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(d.tw));
+      const a = 0.5 + 0.5 * (0.5 + 0.5 * Math.sin(d.tw));
       // white when idle, accent blue when hot
       const r = Math.round(255 - 108 * d.heat), g = Math.round(255 - 58 * d.heat), b = Math.round(255 - 2 * d.heat);
-      ctx.fillStyle = `rgba(${r},${g},${b},${a * 0.18})`;
-      ctx.beginPath(); ctx.arc(d.x, d.y, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(${r},${g},${b},${a * 0.22})`;
+      ctx.beginPath(); ctx.arc(d.x, d.y, 5, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
-      ctx.beginPath(); ctx.arc(d.x, d.y, 1.4, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(d.x, d.y, 1.9, 0, Math.PI * 2); ctx.fill();
     }
     for (const s of sparks) {
       ctx.fillStyle = `rgba(147,197,253,${s.life})`;
