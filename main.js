@@ -128,9 +128,11 @@ if (nav && toggle) {
 }
 
 // ---------- Nav bar: charged dots ----------
-// Idle: true Brownian motion. Each dot's velocity follows a Langevin
-// (Ornstein-Uhlenbeck) process: friction plus Gaussian random kicks, so the
-// dots wander on random paths across the bar. When the pointer is over the bar the
+// Idle: a charged Brownian particle in a magnetic field. Each dot's velocity
+// follows a Langevin equation with a Lorentz force,
+//   dv = -gamma v dt + (q/m) v x B dt + sigma dW,   B out of the screen,
+// so the dots wander randomly but their paths curl into loops (positive and
+// negative charges curl in opposite directions). When the pointer is over the bar the
 // dots light up and swarm to it, shedding small sparks as they slow down.
 // On a new page the dots start bunched on the link that was clicked, then spread.
 (() => {
@@ -156,8 +158,9 @@ if (nav && toggle) {
   const rnd = (a, b) => a + Math.random() * (b - a);
   // standard normal deviate (Box-Muller)
   const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
-  const GAMMA = 0.03;              // friction per frame (velocity memory ~0.5 s)
-  const SIG_X = 0.75, SIG_Y = 0.45; // typical random speed, px/frame (bar is short, so less vertical)
+  const GAMMA = 0.04;                // friction (collision rate) per frame
+  const SIG_X = 1.0, SIG_Y = 1.0;     // typical random speed, px/frame
+  const OMEGA = [0.05, 0.09];         // cyclotron frequency qB/m, rad/frame (loops ~14 px)
 
   function size() {
     const r = bar.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
@@ -172,6 +175,7 @@ if (nav && toggle) {
     return {
       x, y, vx: rnd(-0.3, 0.3), vy: rnd(-0.3, 0.3),
       phase: rnd(0, Math.PI * 2), spin: rnd(0.05, 0.1), rg: rnd(3, 7),
+      w: (Math.random() < 0.5 ? -1 : 1) * rnd(OMEGA[0], OMEGA[1]),   // sign = charge
       tw: rnd(0, Math.PI * 2), tws: rnd(0.025, 0.05),
       heat: 0,
     };
@@ -216,6 +220,10 @@ if (nav && toggle) {
         const f = Math.exp(-GAMMA * k), n = Math.sqrt(1 - f * f);
         d.vx = d.vx * f + SIG_X * n * gauss();
         d.vy = d.vy * f + SIG_Y * n * gauss();
+        // Lorentz force v x B: rotate the velocity by the cyclotron angle
+        const c = Math.cos(d.w * k), sn = Math.sin(d.w * k), vx = d.vx;
+        d.vx = vx * c - d.vy * sn;
+        d.vy = vx * sn + d.vy * c;
         d.heat = Math.max(0, d.heat - 0.02 * k);
       }
       d.x += d.vx * k; d.y += d.vy * k;
