@@ -37,7 +37,7 @@
     return [bx, by];
   }
 
-  const stops = [[88, 28, 200], [139, 92, 246], [196, 160, 255], [120, 230, 255], [235, 245, 255]];
+  const stops = [[70, 20, 150], [130, 50, 230], [175, 110, 255], [205, 185, 255], [240, 245, 255]];
   function color(f, a) {
     f = Math.max(0, Math.min(0.999, f)) * (stops.length - 1);
     const i = Math.floor(f), m = f - i, A = stops[i], B = stops[i + 1];
@@ -64,7 +64,7 @@
         if (px < -20 || px > W + 20 || py < -20 || py > H + 20) break;
       }
       const strength = mag / steps;          // mean |B| along the line
-      ctx.strokeStyle = color(strength / 1.6, 0.09 + Math.min(0.12, strength * 0.06));
+      ctx.strokeStyle = color(strength / 1.5, 0.11 + Math.min(0.14, strength * 0.07));
       ctx.stroke();
     }
   }
@@ -117,36 +117,12 @@
 // ---------- Mobile nav ----------
 const nav = document.querySelector('.nav');
 const toggle = document.querySelector('.nav-toggle');
-toggle.addEventListener('click', () => {
-  const open = nav.classList.toggle('open');
-  toggle.setAttribute('aria-expanded', open);
-});
-document.querySelectorAll('.nav-links a').forEach((a) =>
-  a.addEventListener('click', () => { nav.classList.remove('open'); toggle.setAttribute('aria-expanded', false); })
-);
-
-// ---------- Active nav link on scroll ----------
-const links = [...document.querySelectorAll('.nav-links a')];
-const targets = links
-  .map((a) => document.querySelector(a.getAttribute('href') === '#top' ? '.hero' : a.getAttribute('href')))
-  .filter(Boolean);
-const spy = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((e) => {
-      if (!e.isIntersecting) return;
-      const i = targets.indexOf(e.target);
-      links.forEach((l) => l.classList.remove('active'));
-      if (links[i]) links[i].classList.add('active');
-    });
-  },
-  { rootMargin: '-45% 0px -50% 0px' }
-);
-targets.forEach((t) => spy.observe(t));
-
-// ---------- Reveal on scroll ----------
-const revealables = document.querySelectorAll('.news-card, .sci-card, .exp, .collab, .questions li, .timeline li');
-const rev = new IntersectionObserver(
-  (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); rev.unobserve(e.target); } }),
-  { threshold: 0.08 }
-);
-revealables.forEach((el) => { el.classList.add('reveal'); rev.observe(el); });
+if (nav && toggle) {
+  toggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+  nav.querySelectorAll('.nav-links a').forEach((a) =>
+    a.addEventListener('click', () => { nav.classList.remove('open'); toggle.setAttribute('aria-expanded', false); })
+  );
+}
