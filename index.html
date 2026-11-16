@@ -3,131 +3,345 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kush Khwahish</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Khwahish Kushwah</title>
+  <meta name="description" content="Khwahish Kushwah — theoretical nuclear physicist working on relativistic magnetohydrodynamics from kinetic theory, heavy-ion collisions and magnetized astrophysical plasmas." />
+  <meta name="theme-color" content="#080c16" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <!-- NAV -->
-  <nav class="nav">
-    <span class="nav-logo">KK</span>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#research">Research</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+  <header class="nav" id="top">
+    <a href="#top" class="nav-brand">Khwahish Kushwah</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#top" class="active">Home</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#featured">Featured Science</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#talks">Talks</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#collaborators">Collaborators</a></li>
+      </ul>
+    </nav>
+  </header>
 
   <!-- HERO -->
-  <section class="hero" id="about">
+  <section class="hero">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="hero-shade" aria-hidden="true"></div>
     <div class="hero-content">
-      <p class="hero-tag">Hello, I'm</p>
-      <h1 class="hero-name">Kush Khwahish</h1>
-      <p class="hero-bio">
-        Researcher &amp; lifelong learner at the intersection of science and technology.
-        I explore ideas rigorously, and when I build something worth sharing — code, findings, or experiments — I post it here.
-      </p>
-      <div class="hero-cta">
-        <a href="#research" class="btn btn-primary">View Research</a>
-        <a href="#projects" class="btn btn-secondary">See Projects</a>
-      </div>
-    </div>
-    <div class="hero-decoration" aria-hidden="true">
-      <div class="blob"></div>
-    </div>
-  </section>
-
-  <!-- RESEARCH -->
-  <section class="section" id="research">
-    <div class="container">
-      <h2 class="section-title">Research &amp; Academic Work</h2>
-      <p class="section-sub">Papers, studies, and work I've contributed to.</p>
-
-      <div class="cards">
-        <!-- Duplicate or edit these cards to add your real research -->
-        <article class="card">
-          <div class="card-tag">Placeholder</div>
-          <h3 class="card-title">Your First Research Project</h3>
-          <p class="card-desc">A brief description of what this work is about, the key question it addresses, and any outcomes or findings.</p>
-          <div class="card-footer">
-            <span class="card-meta">2025</span>
-            <!-- <a href="#" class="card-link" target="_blank" rel="noopener">Read paper →</a> -->
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-tag">Placeholder</div>
-          <h3 class="card-title">Another Study or Paper</h3>
-          <p class="card-desc">Describe the subject area, methodology, and what makes this work interesting or impactful.</p>
-          <div class="card-footer">
-            <span class="card-meta">2024</span>
-            <!-- <a href="#" class="card-link" target="_blank" rel="noopener">Read paper →</a> -->
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section class="section section-alt" id="projects">
-    <div class="container">
-      <h2 class="section-title">Projects &amp; Code</h2>
-      <p class="section-sub">Things I've built or experimented with — each linked to its GitHub repo.</p>
-
-      <div class="cards">
-        <!-- Edit these cards and uncomment the GitHub link when you add real projects -->
-        <article class="card">
-          <div class="card-tag">AI / ML</div>
-          <h3 class="card-title">Your First ML Project</h3>
-          <p class="card-desc">Describe what it does, which model or technique you used, and what you learned from building it.</p>
-          <div class="card-footer">
-            <div class="pill-row">
-              <span class="pill">Python</span>
-              <span class="pill">PyTorch</span>
-            </div>
-            <!-- <a href="https://github.com/kushk-physik/REPO-NAME" class="card-link" target="_blank" rel="noopener">GitHub →</a> -->
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-tag">Data</div>
-          <h3 class="card-title">Another Project</h3>
-          <p class="card-desc">A short description of the problem it solves and how you approached it.</p>
-          <div class="card-footer">
-            <div class="pill-row">
-              <span class="pill">Python</span>
-              <span class="pill">Pandas</span>
-            </div>
-            <!-- <a href="https://github.com/kushk-physik/REPO-NAME" class="card-link" target="_blank" rel="noopener">GitHub →</a> -->
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="section" id="contact">
-    <div class="container contact-container">
-      <h2 class="section-title">Get in Touch</h2>
-      <p class="section-sub">Reach out for collaborations, questions, or just to say hi.</p>
-      <div class="contact-links">
-        <a href="mailto:khwahishkushwah3@gmail.com" class="contact-item">
-          <span class="contact-icon">✉</span>
-          <span>khwahishkushwah3@gmail.com</span>
+      <h1>Khwahish Kushwah</h1>
+      <p class="hero-role">Theoretical Nuclear Physicist</p>
+      <p class="hero-inst">PhD, Universidade Federal Fluminense (UFF), Brazil</p>
+      <div class="socials">
+        <a href="mailto:khwahishkushwah3@gmail.com" title="Email" aria-label="Email">
+          <svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.2V17h16V7.2l-8 5.3-8-5.3zM5.3 7 12 11.4 18.7 7H5.3z"/></svg>
         </a>
-        <a href="https://github.com/kushk-physik" target="_blank" rel="noopener" class="contact-item">
-          <span class="contact-icon">⌥</span>
-          <span>github.com/kushk-physik</span>
+        <a href="https://inspirehep.net/authors/2779952" target="_blank" rel="noopener" title="INSPIRE-HEP" aria-label="INSPIRE-HEP"><span class="txt">iH</span></a>
+        <a href="https://arxiv.org/search/?query=khwahish+kushwah&amp;searchtype=author" target="_blank" rel="noopener" title="arXiv" aria-label="arXiv"><span class="txt">arχ</span></a>
+        <a href="https://scholar.google.com/citations?user=-pHg-ssAAAAJ&hl=en" target="_blank" rel="noopener" title="Google Scholar" aria-label="Google Scholar">
+          <svg viewBox="0 0 24 24"><path d="M12 3 1 9.5l4 2.36V17c2 2 4.5 3 7 3s5-1 7-3v-5.14l2-1.18V16h2V9.5L12 3zm0 2.32 7.07 4.18L12 13.68 4.93 9.5 12 5.32zM7 13.04l5 2.96 5-2.96v3.1C15.5 17.4 13.8 18 12 18s-3.5-.6-5-1.86v-3.1z"/></svg>
+        </a>
+        <a href="https://github.com/kushk-physik" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
         </a>
       </div>
     </div>
+    <a href="#about" class="scroll-cue" aria-label="Scroll to content"><span></span></a>
   </section>
+
+  <main>
+    <!-- ABOUT -->
+    <section class="section" id="about">
+      <div class="container about-grid">
+        <div class="about-main">
+          <h3>About Me</h3>
+          <p>
+            I am a theoretical nuclear physicist working on how hot, dense, strongly magnetized matter flows.
+            I did my PhD at the <a href="https://www.uff.br" target="_blank" rel="noopener">Universidade Federal Fluminense</a>
+            in Brazil with <a href="https://www.researchgate.net/profile/Gabriel-Denicol" target="_blank" rel="noopener">Gabriel S. Denicol</a>,
+            deriving relativistic dissipative and resistive magnetohydrodynamics directly from the Boltzmann equation for multi-component plasmas.
+          </p>
+          <p>
+            The same equations describe two very different systems: the quark–gluon plasma created in heavy-ion collisions at RHIC and the LHC,
+            where magnetic fields reach 10<sup>18</sup>&nbsp;Gauss, and magnetized accretion flows around compact objects.
+            I care about getting the theory <em>right</em>&nbsp;— causal, stable and well-posed&nbsp;— and then using it in simulations.
+          </p>
+          <p>
+            Recently I have been a visiting researcher at <strong>Lawrence Berkeley National Laboratory</strong> and <strong>RIKEN iTHEMS</strong> (2026)
+            and at the <strong>University of Illinois Urbana-Champaign</strong> (2024, 2026).
+          </p>
+
+          <h3>Research Questions</h3>
+          <ul class="questions">
+            <li>How do electromagnetic fields shape the earliest, far-from-equilibrium stage of a heavy-ion collision?</li>
+            <li>When is a relativistic dissipative MHD theory causal and stable&nbsp;— linearly <em>and</em> nonlinearly?</li>
+            <li>How does charge transport in a two-component plasma modify Ohm’s law at strong fields?</li>
+            <li>What does kinetic theory tell us about resistive, dissipative flows in accretion disks?</li>
+          </ul>
+        </div>
+
+        <aside class="about-side">
+          <div class="side-block">
+            <h3>Education</h3>
+            <ul class="edu">
+              <li>
+                <span class="edu-icon" aria-hidden="true">◆</span>
+                <div>
+                  <strong>PhD in Physics</strong>
+                  <span>Universidade Federal Fluminense, Brazil</span>
+                  <small>2021 – 2026 · Advisor: G. S. Denicol</small>
+                </div>
+              </li>
+              <li>
+                <span class="edu-icon" aria-hidden="true">◆</span>
+                <div>
+                  <strong>Integrated M.Sc. in Physics</strong>
+                  <span>NISER Bhubaneswar, India</span>
+                  <small>2016 – 2021 · Advisor: A. Jaiswal</small>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="side-block">
+            <h3>Research Interests</h3>
+            <div class="tags">
+              <span>Relativistic MHD</span>
+              <span>Kinetic theory</span>
+              <span>Heavy-ion collisions</span>
+              <span>Causality &amp; stability</span>
+              <span>Accretion disks</span>
+              <span>Chiral magnetic effect</span>
+              <span>Pre-equilibrium dynamics</span>
+              <span>Transport simulations</span>
+            </div>
+          </div>
+          <div class="side-block">
+            <h3>Awards</h3>
+            <ul class="plain">
+              <li>CNPq PhD Fellowship, Brazil (2021–2025)</li>
+              <li>DST INSPIRE Fellowship, India (2016–2021)</li>
+              <li>Best Presentation, Swieca School (2023)</li>
+              <li>EPJ Featured Talk, Quark Matter 2025</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- NEWS -->
+    <section class="section section-alt" id="news">
+      <div class="container">
+        <h2 class="section-title">Recent News</h2>
+        <div class="news-grid">
+          <article class="news-card">
+            <span class="news-tag">New preprint</span>
+            <time>September 2026</time>
+            <h3><a href="https://arxiv.org/abs/2609.05923" target="_blank" rel="noopener">Magnetic fields make the early gluon plasma anisotropic</a></h3>
+            <p>With A. Mizher, G. Denicol and A. Ayala, we use effective kinetic theory to show how a strong magnetic field induces anisotropic gluon pressure during pre-equilibrium in heavy-ion collisions.</p>
+          </article>
+          <article class="news-card">
+            <span class="news-tag">Visit</span>
+            <time>Sep – Oct 2026</time>
+            <h3>Visiting LBNL and RIKEN iTHEMS, Berkeley</h3>
+            <p>Working on the MC-EKRT model with Y. Kanakubo and L. Du, and on a framework for the chiral magnetic effect with V. Koch. Invited talk at the LBNL Heavy-Ion Theory seminar.</p>
+          </article>
+          <article class="news-card">
+            <span class="news-tag">Talk</span>
+            <time>2026</time>
+            <h3>Strangeness in Quark Matter 2026, Los Angeles</h3>
+            <p>Presented “Momentum anisotropy from resistive magnetohydrodynamics”, now published in the <em>Journal of Subatomic Particles and Cosmology</em>.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED SCIENCE -->
+    <section class="section" id="featured">
+      <div class="container">
+        <h2 class="section-title center">Featured Science Highlights</h2>
+        <div class="science-grid">
+
+          <a class="sci-card" href="https://doi.org/10.1103/tl97-r2kh" target="_blank" rel="noopener">
+            <div class="sci-img"><img src="assets/img/fig-resistive.jpg" alt="Damped oscillations of the diffusion current for several η/s" loading="lazy" /></div>
+            <div class="sci-body">
+              <span class="sci-tag">Resistive MHD</span>
+              <h3>Relativistic resistive magnetohydrodynamics for a two-component plasma</h3>
+              <p>Ohm’s law is not instantaneous. We derive how charge currents relax in an electron–ion plasma and find damped oscillations when collisions are weak.</p>
+              <time>Phys. Rev. D 113, 036021 · 2026</time>
+            </div>
+          </a>
+
+          <a class="sci-card" href="https://doi.org/10.1103/nf7r-z6zk" target="_blank" rel="noopener">
+            <div class="sci-img"><img src="assets/img/fig-causality.jpg" alt="Dispersion relations Re(ω) and Im(ω) versus k for two magnetic fields" loading="lazy" /></div>
+            <div class="sci-body">
+              <span class="sci-tag">Causality &amp; stability</span>
+              <h3>Causality and stability of MHD for an ultrarelativistic two-component gas</h3>
+              <p>Do perturbations ever travel faster than light, or grow without bound? Linear analysis shows the theory stays causal and stable, and how strong fields reshape its modes.</p>
+              <time>Phys. Rev. D 112, 076035 · 2025</time>
+            </div>
+          </a>
+
+          <a class="sci-card" href="https://doi.org/10.1103/PhysRevD.109.096021" target="_blank" rel="noopener">
+            <div class="sci-img"><img src="assets/img/fig-dissipative.jpg" alt="Time evolution of longitudinal and transverse shear stress for several B0" loading="lazy" /></div>
+            <div class="sci-body">
+              <span class="sci-tag">Kinetic theory</span>
+              <h3>Relativistic dissipative MHD from the Boltzmann equation</h3>
+              <p>Starting from kinetic theory, we obtain the equations of motion for shear stress in a magnetized two-component gas and show how the field splits it into distinct components.</p>
+              <time>Phys. Rev. D 109, 096021 · 2024</time>
+            </div>
+          </a>
+
+          <a class="sci-card" href="https://doi.org/10.1016/j.jspc.2026.100530" target="_blank" rel="noopener">
+            <div class="sci-img"><img src="assets/img/fig-anisotropy.jpg" alt="Momentum anisotropy generated by the electric field for several E0" loading="lazy" /></div>
+            <div class="sci-body">
+              <span class="sci-tag">Heavy-ion collisions</span>
+              <h3>Momentum anisotropy from resistive magnetohydrodynamics</h3>
+              <p>An electric field alone, with no flow gradients, can push the plasma out of isotropy. The effect grows with field strength and fades as the charge current depletes the field.</p>
+              <time>J. Subatomic Part. Cosmol. 6, 100530 · 2026</time>
+            </div>
+          </a>
+
+          <a class="sci-card" href="https://arxiv.org/abs/2609.05923" target="_blank" rel="noopener">
+            <div class="sci-img art art-glasma" aria-hidden="true"></div>
+            <div class="sci-body">
+              <span class="sci-tag">Pre-equilibrium</span>
+              <h3>Magnetic-field-induced anisotropic gluon pressure in heavy-ion collisions</h3>
+              <p>An effective kinetic description of how the initial magnetic field biases gluon pressure before hydrodynamics takes over.</p>
+              <time>arXiv:2609.05923 · 2026</time>
+            </div>
+          </a>
+
+          <a class="sci-card" href="https://doi.org/10.1051/epjconf/202636414002" target="_blank" rel="noopener">
+            <div class="sci-img art art-disk" aria-hidden="true"></div>
+            <div class="sci-body">
+              <span class="sci-tag">Astrophysics</span>
+              <h3>Relativistic dissipative magnetohydrodynamics in accretion disks</h3>
+              <p>Taking the two-component theory to astrophysical plasmas: what resistive, dissipative transport means for magnetized accretion flows. EPJ featured talk at Quark Matter 2025.</p>
+              <time>EPJ Web Conf. 364, 14002 · 2026</time>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PUBLICATIONS -->
+    <section class="section section-alt" id="publications">
+      <div class="container narrow">
+        <h2 class="section-title">Publications</h2>
+        <p class="section-sub">Full list on <a href="https://inspirehep.net/authors/2779952" target="_blank" rel="noopener">INSPIRE-HEP</a>.</p>
+
+        <h3 class="list-head">Journal articles</h3>
+        <ol class="pubs">
+          <li><strong>K. Kushwah</strong>, G. S. Denicol, C. V. P. Brito — <a href="https://doi.org/10.1103/tl97-r2kh" target="_blank" rel="noopener">Relativistic resistive magnetohydrodynamics for two component plasma</a>. <em>Phys. Rev. D</em> <b>113</b>, 036021 (2026).</li>
+          <li>C. V. P. Brito, <strong>K. Kushwah</strong>, G. S. Denicol — <a href="https://doi.org/10.1103/nf7r-z6zk" target="_blank" rel="noopener">Causality and stability of magnetohydrodynamics for an ultrarelativistic locally neutral two component gas</a>. <em>Phys. Rev. D</em> <b>112</b>, 076035 (2025).</li>
+          <li><strong>K. Kushwah</strong>, G. S. Denicol — <a href="https://doi.org/10.1103/PhysRevD.109.096021" target="_blank" rel="noopener">Relativistic dissipative magnetohydrodynamics from the Boltzmann equation for a two component gas</a>. <em>Phys. Rev. D</em> <b>109</b>, 096021 (2024).</li>
+          <li><strong>K. Kushwah</strong>, A. Mizher, G. S. Denicol, A. Ayala — <a href="https://arxiv.org/abs/2609.05923" target="_blank" rel="noopener">Effective kinetic theory description of the magnetic field-induced anisotropic gluon pressure during pre-equilibrium in heavy-ion collisions</a>. arXiv:2609.05923 (submitted to <em>Phys. Rev. D</em>).</li>
+        </ol>
+
+        <h3 class="list-head">Proceedings</h3>
+        <ol class="pubs">
+          <li><strong>K. Kushwah</strong>, G. S. Denicol — <a href="https://doi.org/10.1051/epjconf/202636414002" target="_blank" rel="noopener">Relativistic dissipative magnetohydrodynamics in accretion disks</a>. <em>EPJ Web Conf.</em> <b>364</b>, 14002 (2026). <span class="badge">EPJ featured talk</span></li>
+          <li><strong>K. Kushwah</strong>, G. S. Denicol — <a href="https://doi.org/10.1016/j.jspc.2026.100530" target="_blank" rel="noopener">Momentum anisotropy from resistive magnetohydrodynamics</a>. <em>J. Subatomic Part. Cosmol.</em> <b>6</b>, 100530 (2026).</li>
+          <li><strong>K. Kushwah</strong>, G. S. Denicol — <a href="https://doi.org/10.1051/epjconf/202429603004" target="_blank" rel="noopener">Causal and stable magnetohydrodynamics</a>. <em>EPJ Web Conf.</em> <b>296</b>, 03004 (2024).</li>
+        </ol>
+
+        <h3 class="list-head">In preparation</h3>
+        <ul class="pubs prep">
+          <li><strong>K. Kushwah</strong>, I. Cordeiro, G. S. Denicol, J. Noronha — Nonlinear causality and stability analysis of GRMHD from kinetic theory for a two-component gas.</li>
+          <li><strong>K. Kushwah</strong>, J. Noronha-Hostler <i>et al.</i> — ICCING with magnetic fields.</li>
+          <li>T. Guri, A. Soloviev, <strong>K. Kushwah</strong> — 2-form MHD.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TALKS -->
+    <section class="section" id="talks">
+      <div class="container narrow">
+        <h2 class="section-title">Talks</h2>
+        <ul class="timeline">
+          <li><span class="yr">2026</span><div><strong>Electromagnetic fields in relativistic plasma</strong><span><a href="https://vandygraf.github.io/" target="_blank" rel="noopener">VandyGRAF</a>, Vanderbilt University</span><em class="inv">Invited</em></div></li>
+          <li><span class="yr">2026</span><div><strong>Impact of magnetic fields on early-time dynamics in relativistic heavy-ion collisions</strong><span><a href="https://hit.lbl.gov/previous-seminars" target="_blank" rel="noopener">HIT seminar</a>, Lawrence Berkeley National Laboratory</span><em class="inv">Invited</em></div></li>
+          <li><span class="yr">2026</span><div><strong>Momentum anisotropy from resistive magnetohydrodynamics</strong><span><a href="https://indico.global/event/13943/contributions/141155/" target="_blank" rel="noopener">Strangeness in Quark Matter 2026</a>, Los Angeles</span></div></li>
+          <li><span class="yr">2025</span><div><strong>Dissipative magnetohydrodynamics in accretion disks</strong><span><a href="https://indi.to/fFhsz" target="_blank" rel="noopener">Quark Matter 2025</a>, Frankfurt</span><em class="inv">EPJ featured</em></div></li>
+          <li><span class="yr">2025</span><div><strong>Relativistic MHD of two-component plasmas in accretion disks and heavy-ion collisions</strong><span><a href="https://www.youtube.com/watch?v=33c5IGyCdZw&t=3552s" target="_blank" rel="noopener">Chirality, Vorticity and Magnetic Fields in Quantum Matter</a>, São Paulo</span></div></li>
+          <li><span class="yr">2024</span><div><strong>Exploring dissipative dynamics in relativistic magnetohydrodynamics</strong><span><a href="https://nuclear.physics.ucla.edu/content/Seminar-2024" target="_blank" rel="noopener">Nuclear Physics Seminar</a>, UCLA</span><em class="inv">Invited</em></div></li>
+          <li><span class="yr">2024</span><div><strong>Towards a generalized framework for relativistic magnetohydrodynamics</strong><span>Nuclear Theory Seminar, UIUC</span></div></li>
+          <li><span class="yr">2024</span><div><strong>Stability constraints in relativistic dissipative magnetohydrodynamics</strong><span><a href="https://vandygraf.github.io/archived-speakers/2024-2025/khwahish-kushwah" target="_blank" rel="noopener">VandyGRAF</a>, Vanderbilt University</span><em class="inv">Invited</em></div></li>
+          <li><span class="yr">2024</span><div><strong>Heavy-ion collisions in the presence of electromagnetic fields</strong><span>High Energy Physics Seminar, NISER</span><em class="inv">Invited</em></div></li>
+          <li><span class="yr">2023</span><div><strong>Relativistic dissipative magnetohydrodynamics for a two-component gas</strong><span><a href="https://indico.cern.ch/event/1139644/contributions/5453467/" target="_blank" rel="noopener">Quark Matter 2023</a>, Houston</span></div></li>
+          <li><span class="yr">2023</span><div><strong>Causal and stable magnetohydrodynamics</strong><span>Jorge André Swieca School of Theoretical Nuclear Physics, Brazil</span><em class="inv">Best presentation</em></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="section section-alt" id="experience">
+      <div class="container narrow">
+        <h2 class="section-title">Research Experience</h2>
+        <div class="exp-grid">
+          <article class="exp">
+            <time>Sep – Oct 2026</time>
+            <h3>Visiting Researcher · LBNL &amp; RIKEN iTHEMS</h3>
+            <p>Monte Carlo EKRT model with Y. Kanakubo and L. Du; chiral magnetic effect framework with V. Koch.</p>
+          </article>
+          <article class="exp">
+            <time>Aug 2026</time>
+            <h3>Visiting Researcher · UIUC</h3>
+            <p>Extending ICCING to include electromagnetic fields (with J. Noronha-Hostler); nonlinear causality of two-component plasmas (with J. Noronha).</p>
+          </article>
+          <article class="exp">
+            <time>2021 – 2026</time>
+            <h3>PhD Research · UFF, Brazil</h3>
+            <p>Transient equations for shear stress and charge diffusion of multi-component plasmas in EM fields, with causality and stability analysis.</p>
+          </article>
+          <article class="exp">
+            <time>Oct – Nov 2024</time>
+            <h3>Visiting Researcher · UIUC</h3>
+            <p>Nonlinear causality constraints on transport coefficients, stresses and fields in massless dissipative MHD (with J. Noronha).</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLLABORATORS -->
+    <section class="section" id="collaborators">
+      <div class="container">
+        <h2 class="section-title center">Collaborators</h2>
+        <div class="collab-grid">
+          <div class="collab"><span class="init">GD</span><strong>Gabriel S. Denicol</strong><small>UFF, Brazil</small></div>
+          <div class="collab"><span class="init">JN</span><strong>Jorge Noronha</strong><small>UIUC, USA</small></div>
+          <div class="collab"><span class="init">JH</span><strong>Jacquelyn Noronha-Hostler</strong><small>UIUC, USA</small></div>
+          <div class="collab"><span class="init">AA</span><strong>Alejandro Ayala</strong><small>UNAM, Mexico</small></div>
+          <div class="collab"><span class="init">VK</span><strong>Volker Koch</strong><small>LBNL, USA</small></div>
+          <div class="collab"><span class="init">YK</span><strong>Yuuka Kanakubo</strong><small>RIKEN iTHEMS</small></div>
+          <div class="collab"><span class="init">AM</span><strong>A. Mizher</strong><small>Heavy-ion theory</small></div>
+          <div class="collab"><span class="init">CB</span><strong>C. V. P. Brito</strong><small>Relativistic MHD</small></div>
+          <div class="collab"><span class="init">AJ</span><strong>Amaresh Jaiswal</strong><small>NISER, India</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section section-alt contact" id="contact">
+      <div class="container narrow center">
+        <h2 class="section-title center">Get in Touch</h2>
+        <p class="section-sub">Open to postdoctoral positions and collaborations in nuclear theory, relativistic plasmas and computational physics.</p>
+        <a class="btn" href="mailto:khwahishkushwah3@gmail.com">khwahishkushwah3@gmail.com</a>
+      </div>
+    </section>
+  </main>
 
   <footer class="footer">
-    <p>© 2026 Kush Khwahish · Built with GitHub Pages</p>
+    <p>© 2026 Khwahish Kushwah</p>
   </footer>
 
   <script src="main.js"></script>
