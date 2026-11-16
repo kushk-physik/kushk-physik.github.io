@@ -128,8 +128,9 @@ if (nav && toggle) {
 }
 
 // ---------- Nav bar: charged dots ----------
-// Idle: each dot gyrates around one of two guide "field lines" while drifting
-// sideways, with a little Brownian jitter. When the pointer is over the bar the
+// Idle: true Brownian motion. Each dot's velocity follows a Langevin
+// (Ornstein-Uhlenbeck) process: friction plus Gaussian random kicks, so the
+// dots wander on random paths across the bar. When the pointer is over the bar the
 // dots light up and swarm to it, shedding small sparks as they slow down.
 // On a new page the dots start bunched on the link that was clicked, then spread.
 (() => {
@@ -150,10 +151,13 @@ if (nav && toggle) {
       if (r < 0.5) { const a = rnd(0, Math.PI * 2); dx = Math.cos(a); dy = Math.sin(a); r = 1; }
       const v = SCATTER * rnd(0.6, 1.4);
       d.vx += (dx / r) * v; d.vy += (dy / r) * v * 0.35;
-      d.drift = Math.sign(dx || 1) * Math.abs(d.drift);
     }
   }
   const rnd = (a, b) => a + Math.random() * (b - a);
+  // standard normal deviate (Box-Muller)
+  const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
+  const GAMMA = 0.03;              // friction per frame (velocity memory ~0.5 s)
+  const SIG_X = 0.75, SIG_Y = 0.45; // typical random speed, px/frame (bar is short, so less vertical)
 
   function size() {
     const r = bar.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
@@ -167,9 +171,7 @@ if (nav && toggle) {
   function make(x, y) {
     return {
       x, y, vx: rnd(-0.3, 0.3), vy: rnd(-0.3, 0.3),
-      line: Math.random() < 0.5 ? 0 : 1,
       phase: rnd(0, Math.PI * 2), spin: rnd(0.05, 0.1), rg: rnd(3, 7),
-      drift: (Math.random() < 0.5 ? -1 : 1) * rnd(0.025, 0.055),
       tw: rnd(0, Math.PI * 2), tws: rnd(0.025, 0.05),
       heat: 0,
     };
@@ -189,8 +191,6 @@ if (nav && toggle) {
       : make(rnd(0, W), rnd(4, H - 4)));
     if (lr) setTimeout(() => burst(lr.left - br.left + lr.width / 2, lr.top - br.top + lr.height / 2), 350);
   }
-
-  const lineY = (i) => (i === 0 ? H * 0.28 : H * 0.72);
 
   function step(k) {
     if (wasHot && !hot) burst(px, py);
@@ -212,18 +212,18 @@ if (nav && toggle) {
           sparks.push({ x: d.x, y: d.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1 });
         }
       } else {
-        // gyrate about a guide line, drift sideways, plus Brownian kicks
-        const gy = lineY(d.line) + Math.sin(d.phase) * d.rg;
-        d.vy += (gy - d.y) * 0.03 * k;
-        d.vx += d.drift * k;
-        d.vx += rnd(-0.1, 0.1) * k; d.vy += rnd(-0.1, 0.1) * k;
-        d.vx *= Math.pow(0.97, k); d.vy *= Math.pow(0.95, k);
+        // Langevin step: v <- v e^{-g k} + sigma sqrt(1 - e^{-2 g k}) N(0,1)
+        const f = Math.exp(-GAMMA * k), n = Math.sqrt(1 - f * f);
+        d.vx = d.vx * f + SIG_X * n * gauss();
+        d.vy = d.vy * f + SIG_Y * n * gauss();
         d.heat = Math.max(0, d.heat - 0.02 * k);
       }
       d.x += d.vx * k; d.y += d.vy * k;
-      if (d.x < 3) { d.x = 3; d.vx = Math.abs(d.vx); d.drift = Math.abs(d.drift); }
-      if (d.x > W - 3) { d.x = W - 3; d.vx = -Math.abs(d.vx); d.drift = -Math.abs(d.drift); }
-      if (d.y < 3 || d.y > H - 3) { d.y = Math.max(3, Math.min(H - 3, d.y)); d.vy *= -0.3; }
+      // reflecting walls
+      if (d.x < 3) { d.x = 3; d.vx = Math.abs(d.vx); }
+      if (d.x > W - 3) { d.x = W - 3; d.vx = -Math.abs(d.vx); }
+      if (d.y < 3) { d.y = 3; d.vy = Math.abs(d.vy); }
+      if (d.y > H - 3) { d.y = H - 3; d.vy = -Math.abs(d.vy); }
     }
     for (const s of sparks) { s.x += s.vx * k; s.y += s.vy * k; s.life -= 0.045 * k; }
     sparks = sparks.filter((s) => s.life > 0);
