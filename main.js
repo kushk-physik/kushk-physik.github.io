@@ -128,11 +128,9 @@ if (nav && toggle) {
 }
 
 // ---------- Nav bar: charged dots ----------
-// Idle: a charged Brownian particle in a magnetic field. Each dot's velocity
-// follows a Langevin equation with a Lorentz force,
-//   dv = -gamma v dt + (q/m) v x B dt + sigma dW,   B out of the screen,
-// so the dots wander randomly but their paths curl into loops (positive and
-// negative charges curl in opposite directions). When the pointer is over the bar the
+// Idle: each dot gyrates around one of two guide "field lines" while drifting
+// sideways, with a little random jitter. When a cluster breaks up the dots get
+// a strong outward kick. When the pointer is over the bar the
 // dots light up and swarm to it, shedding small sparks as they slow down.
 // On a new page the dots start bunched on the link that was clicked, then spread.
 (() => {
@@ -146,21 +144,17 @@ if (nav && toggle) {
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let W = 0, H = 0, dots = [], sparks = [], px = 0, py = 0, hot = false, wasHot = false, raf = null, last = null;
-  const SCATTER = 4.5;   // outward kick speed (px/frame) when a cluster breaks up
+  const SCATTER = 9;     // outward kick speed (px/frame) when a cluster breaks up
   function burst(cx, cy) {
     for (const d of dots) {
       let dx = d.x - cx, dy = d.y - cy, r = Math.hypot(dx, dy);
       if (r < 0.5) { const a = rnd(0, Math.PI * 2); dx = Math.cos(a); dy = Math.sin(a); r = 1; }
-      const v = SCATTER * rnd(0.6, 1.4);
+      const v = SCATTER * rnd(0.5, 1.6);
       d.vx += (dx / r) * v; d.vy += (dy / r) * v * 0.35;
+      d.drift = Math.sign(dx || 1) * Math.abs(d.drift);
     }
   }
   const rnd = (a, b) => a + Math.random() * (b - a);
-  // standard normal deviate (Box-Muller)
-  const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
-  const GAMMA = 0.04;                // friction (collision rate) per frame
-  const SIG_X = 1.0, SIG_Y = 1.0;     // typical random speed, px/frame
-  const OMEGA = [0.05, 0.09];         // cyclotron frequency qB/m, rad/frame (loops ~14 px)
 
   function size() {
     const r = bar.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
@@ -175,7 +169,8 @@ if (nav && toggle) {
     return {
       x, y, vx: rnd(-0.3, 0.3), vy: rnd(-0.3, 0.3),
       phase: rnd(0, Math.PI * 2), spin: rnd(0.05, 0.1), rg: rnd(3, 7),
-      w: (Math.random() < 0.5 ? -1 : 1) * rnd(OMEGA[0], OMEGA[1]),   // sign = charge
+      line: Math.random() < 0.5 ? 0 : 1,
+      drift: (Math.random() < 0.5 ? -1 : 1) * rnd(0.025, 0.055),
       tw: rnd(0, Math.PI * 2), tws: rnd(0.025, 0.05),
       heat: 0,
     };
@@ -183,7 +178,7 @@ if (nav && toggle) {
 
   function seed() {
     size();
-    const n = W < 600 ? 36 : 75;
+    const n = W < 600 ? 72 : 150;
     // start on the link of the page we just arrived at (or that was clicked)
     let from = null;
     try { from = sessionStorage.getItem('dotsFrom'); sessionStorage.removeItem('dotsFrom'); } catch (e) {}
@@ -195,6 +190,8 @@ if (nav && toggle) {
       : make(rnd(0, W), rnd(4, H - 4)));
     if (lr) setTimeout(() => burst(lr.left - br.left + lr.width / 2, lr.top - br.top + lr.height / 2), 350);
   }
+
+  const lineY = (i) => (i === 0 ? H * 0.28 : H * 0.72);
 
   function step(k) {
     if (wasHot && !hot) burst(px, py);
@@ -211,27 +208,23 @@ if (nav && toggle) {
         d.vx *= Math.pow(0.86, k); d.vy *= Math.pow(0.86, k);
         d.heat = Math.min(1, d.heat + 0.06 * k);
         const lost = e0 - (d.vx * d.vx + d.vy * d.vy);
-        if (lost > 0.03 && sparks.length < 40 && Math.random() < 0.12 * k) {
+        if (lost > 0.03 && sparks.length < 60 && Math.random() < 0.12 * k) {
           const a = Math.atan2(d.vy, d.vx) + rnd(-0.5, 0.5), s = Math.min(3, lost * 25);
           sparks.push({ x: d.x, y: d.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1 });
         }
       } else {
-        // Langevin step: v <- v e^{-g k} + sigma sqrt(1 - e^{-2 g k}) N(0,1)
-        const f = Math.exp(-GAMMA * k), n = Math.sqrt(1 - f * f);
-        d.vx = d.vx * f + SIG_X * n * gauss();
-        d.vy = d.vy * f + SIG_Y * n * gauss();
-        // Lorentz force v x B: rotate the velocity by the cyclotron angle
-        const c = Math.cos(d.w * k), sn = Math.sin(d.w * k), vx = d.vx;
-        d.vx = vx * c - d.vy * sn;
-        d.vy = vx * sn + d.vy * c;
+        // gyrate about a guide line, drift sideways, plus small random kicks
+        const gy = lineY(d.line) + Math.sin(d.phase) * d.rg;
+        d.vy += (gy - d.y) * 0.03 * k;
+        d.vx += d.drift * k;
+        d.vx += rnd(-0.1, 0.1) * k; d.vy += rnd(-0.1, 0.1) * k;
+        d.vx *= Math.pow(0.97, k); d.vy *= Math.pow(0.95, k);
         d.heat = Math.max(0, d.heat - 0.02 * k);
       }
       d.x += d.vx * k; d.y += d.vy * k;
-      // reflecting walls
-      if (d.x < 3) { d.x = 3; d.vx = Math.abs(d.vx); }
-      if (d.x > W - 3) { d.x = W - 3; d.vx = -Math.abs(d.vx); }
-      if (d.y < 3) { d.y = 3; d.vy = Math.abs(d.vy); }
-      if (d.y > H - 3) { d.y = H - 3; d.vy = -Math.abs(d.vy); }
+      if (d.x < 3) { d.x = 3; d.vx = Math.abs(d.vx); d.drift = Math.abs(d.drift); }
+      if (d.x > W - 3) { d.x = W - 3; d.vx = -Math.abs(d.vx); d.drift = -Math.abs(d.drift); }
+      if (d.y < 3 || d.y > H - 3) { d.y = Math.max(3, Math.min(H - 3, d.y)); d.vy *= -0.3; }
     }
     for (const s of sparks) { s.x += s.vx * k; s.y += s.vy * k; s.life -= 0.045 * k; }
     sparks = sparks.filter((s) => s.life > 0);
