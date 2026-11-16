@@ -144,7 +144,7 @@ if (nav && toggle) {
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let W = 0, H = 0, dots = [], sparks = [], px = 0, py = 0, hot = false, wasHot = false, raf = null, last = null;
-  const SCATTER = 9;     // outward kick speed (px/frame) when a cluster breaks up
+  const SCATTER = 14;     // outward kick speed (px/frame) when a cluster breaks up
   function burst(cx, cy) {
     for (const d of dots) {
       let dx = d.x - cx, dy = d.y - cy, r = Math.hypot(dx, dy);
