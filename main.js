@@ -142,7 +142,17 @@ if (nav && toggle) {
   const ctx = cv.getContext('2d');
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  let W = 0, H = 0, dots = [], sparks = [], px = 0, py = 0, hot = false, raf = null, last = null;
+  let W = 0, H = 0, dots = [], sparks = [], px = 0, py = 0, hot = false, wasHot = false, raf = null, last = null;
+  const SCATTER = 4.5;   // outward kick speed (px/frame) when a cluster breaks up
+  function burst(cx, cy) {
+    for (const d of dots) {
+      let dx = d.x - cx, dy = d.y - cy, r = Math.hypot(dx, dy);
+      if (r < 0.5) { const a = rnd(0, Math.PI * 2); dx = Math.cos(a); dy = Math.sin(a); r = 1; }
+      const v = SCATTER * rnd(0.6, 1.4);
+      d.vx += (dx / r) * v; d.vy += (dy / r) * v * 0.35;
+      d.drift = Math.sign(dx || 1) * Math.abs(d.drift);
+    }
+  }
   const rnd = (a, b) => a + Math.random() * (b - a);
 
   function size() {
@@ -159,7 +169,7 @@ if (nav && toggle) {
       x, y, vx: rnd(-0.3, 0.3), vy: rnd(-0.3, 0.3),
       line: Math.random() < 0.5 ? 0 : 1,
       phase: rnd(0, Math.PI * 2), spin: rnd(0.05, 0.1), rg: rnd(3, 7),
-      drift: (Math.random() < 0.5 ? -1 : 1) * rnd(0.012, 0.03),
+      drift: (Math.random() < 0.5 ? -1 : 1) * rnd(0.025, 0.055),
       tw: rnd(0, Math.PI * 2), tws: rnd(0.025, 0.05),
       heat: 0,
     };
@@ -177,11 +187,14 @@ if (nav && toggle) {
     dots = Array.from({ length: n }, () => lr
       ? make(lr.left - br.left + rnd(0, lr.width), lr.top - br.top + rnd(0, lr.height))
       : make(rnd(0, W), rnd(4, H - 4)));
+    if (lr) setTimeout(() => burst(lr.left - br.left + lr.width / 2, lr.top - br.top + lr.height / 2), 350);
   }
 
   const lineY = (i) => (i === 0 ? H * 0.28 : H * 0.72);
 
   function step(k) {
+    if (wasHot && !hot) burst(px, py);
+    wasHot = hot;
     for (const d of dots) {
       d.phase += d.spin * k;
       d.tw += d.tws * k;
@@ -203,8 +216,8 @@ if (nav && toggle) {
         const gy = lineY(d.line) + Math.sin(d.phase) * d.rg;
         d.vy += (gy - d.y) * 0.03 * k;
         d.vx += d.drift * k;
-        d.vx += rnd(-0.06, 0.06) * k; d.vy += rnd(-0.06, 0.06) * k;
-        d.vx *= Math.pow(0.95, k); d.vy *= Math.pow(0.95, k);
+        d.vx += rnd(-0.1, 0.1) * k; d.vy += rnd(-0.1, 0.1) * k;
+        d.vx *= Math.pow(0.97, k); d.vy *= Math.pow(0.95, k);
         d.heat = Math.max(0, d.heat - 0.02 * k);
       }
       d.x += d.vx * k; d.y += d.vy * k;
