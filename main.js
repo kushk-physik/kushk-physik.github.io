@@ -144,7 +144,9 @@ if (nav && toggle) {
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let W = 0, H = 0, dots = [], sparks = [], px = 0, py = 0, hot = false, wasHot = false, raf = null, last = null;
-  const SCATTER = 14;     // outward kick speed (px/frame) when a cluster breaks up
+  const SPEED = 2;        // overall idle speed: sideways drift and circling (1 = original)
+  const FRICTION = 0.98;  // velocity kept per frame; closer to 1 = dots coast further
+  const SCATTER = 14;     // one-time outward kick (px/frame) when a cluster breaks up
   function burst(cx, cy) {
     for (const d of dots) {
       let dx = d.x - cx, dy = d.y - cy, r = Math.hypot(dx, dy);
@@ -168,9 +170,9 @@ if (nav && toggle) {
   function make(x, y) {
     return {
       x, y, vx: rnd(-0.3, 0.3), vy: rnd(-0.3, 0.3),
-      phase: rnd(0, Math.PI * 2), spin: rnd(0.05, 0.1), rg: rnd(3, 7),
+      phase: rnd(0, Math.PI * 2), spin: rnd(0.05, 0.1) * SPEED, rg: rnd(3, 7),
       line: Math.random() < 0.5 ? 0 : 1,
-      drift: (Math.random() < 0.5 ? -1 : 1) * rnd(0.025, 0.055),
+      drift: (Math.random() < 0.5 ? -1 : 1) * rnd(0.025, 0.055) * SPEED,
       tw: rnd(0, Math.PI * 2), tws: rnd(0.025, 0.05),
       heat: 0,
     };
@@ -218,7 +220,7 @@ if (nav && toggle) {
         d.vy += (gy - d.y) * 0.03 * k;
         d.vx += d.drift * k;
         d.vx += rnd(-0.1, 0.1) * k; d.vy += rnd(-0.1, 0.1) * k;
-        d.vx *= Math.pow(0.97, k); d.vy *= Math.pow(0.95, k);
+        d.vx *= Math.pow(FRICTION, k); d.vy *= Math.pow(0.95, k);
         d.heat = Math.max(0, d.heat - 0.02 * k);
       }
       d.x += d.vx * k; d.y += d.vy * k;
