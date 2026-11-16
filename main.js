@@ -126,3 +126,136 @@ if (nav && toggle) {
     a.addEventListener('click', () => { nav.classList.remove('open'); toggle.setAttribute('aria-expanded', false); })
   );
 }
+
+// ---------- Nav bar: charged dots ----------
+// Idle: each dot gyrates around one of two guide "field lines" while drifting
+// sideways, with a little Brownian jitter. When the pointer is over the bar the
+// dots light up and swarm to it, shedding small sparks as they slow down.
+// On a new page the dots start bunched on the link that was clicked, then spread.
+(() => {
+  const bar = document.querySelector('.nav');
+  if (!bar) return;
+  const cv = document.createElement('canvas');
+  cv.className = 'nav-dots';
+  cv.setAttribute('aria-hidden', 'true');
+  bar.prepend(cv);
+  const ctx = cv.getContext('2d');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let W = 0, H = 0, dots = [], sparks = [], px = 0, py = 0, hot = false, raf = null, last = null;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
+  function size() {
+    const r = bar.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+    const oldW = W || r.width;
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    dots.forEach((d) => { d.x *= W / oldW; d.y = Math.min(d.y, H - 4); });
+  }
+
+  function make(x, y) {
+    return {
+      x, y, vx: rnd(-0.3, 0.3), vy: rnd(-0.3, 0.3),
+      line: Math.random() < 0.5 ? 0 : 1,
+      phase: rnd(0, Math.PI * 2), spin: rnd(0.05, 0.1), rg: rnd(3, 7),
+      drift: (Math.random() < 0.5 ? -1 : 1) * rnd(0.012, 0.03),
+      tw: rnd(0, Math.PI * 2), tws: rnd(0.025, 0.05),
+      heat: 0,
+    };
+  }
+
+  function seed() {
+    size();
+    const n = W < 600 ? 36 : 75;
+    // start on the link of the page we just arrived at (or that was clicked)
+    let from = null;
+    try { from = sessionStorage.getItem('dotsFrom'); sessionStorage.removeItem('dotsFrom'); } catch (e) {}
+    const link = from && [...bar.querySelectorAll('.nav-links a')].find((a) => a.getAttribute('href') === from);
+    const lr = link && link.offsetParent ? link.getBoundingClientRect() : null;
+    const br = bar.getBoundingClientRect();
+    dots = Array.from({ length: n }, () => lr
+      ? make(lr.left - br.left + rnd(0, lr.width), lr.top - br.top + rnd(0, lr.height))
+      : make(rnd(0, W), rnd(4, H - 4)));
+  }
+
+  const lineY = (i) => (i === 0 ? H * 0.28 : H * 0.72);
+
+  function step(k) {
+    for (const d of dots) {
+      d.phase += d.spin * k;
+      d.tw += d.tws * k;
+      const e0 = d.vx * d.vx + d.vy * d.vy;
+      if (hot) {
+        // swarm to the pointer and orbit it
+        const ox = px + Math.cos(d.phase) * (d.rg * 2 + 12), oy = py + Math.sin(d.phase) * (d.rg + 6);
+        d.vx += (ox - d.x) * 0.012 * k;
+        d.vy += (oy - d.y) * 0.03 * k;
+        d.vx *= Math.pow(0.86, k); d.vy *= Math.pow(0.86, k);
+        d.heat = Math.min(1, d.heat + 0.06 * k);
+        const lost = e0 - (d.vx * d.vx + d.vy * d.vy);
+        if (lost > 0.03 && sparks.length < 40 && Math.random() < 0.12 * k) {
+          const a = Math.atan2(d.vy, d.vx) + rnd(-0.5, 0.5), s = Math.min(3, lost * 25);
+          sparks.push({ x: d.x, y: d.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1 });
+        }
+      } else {
+        // gyrate about a guide line, drift sideways, plus Brownian kicks
+        const gy = lineY(d.line) + Math.sin(d.phase) * d.rg;
+        d.vy += (gy - d.y) * 0.03 * k;
+        d.vx += d.drift * k;
+        d.vx += rnd(-0.06, 0.06) * k; d.vy += rnd(-0.06, 0.06) * k;
+        d.vx *= Math.pow(0.95, k); d.vy *= Math.pow(0.95, k);
+        d.heat = Math.max(0, d.heat - 0.02 * k);
+      }
+      d.x += d.vx * k; d.y += d.vy * k;
+      if (d.x < 3) { d.x = 3; d.vx = Math.abs(d.vx); d.drift = Math.abs(d.drift); }
+      if (d.x > W - 3) { d.x = W - 3; d.vx = -Math.abs(d.vx); d.drift = -Math.abs(d.drift); }
+      if (d.y < 3 || d.y > H - 3) { d.y = Math.max(3, Math.min(H - 3, d.y)); d.vy *= -0.3; }
+    }
+    for (const s of sparks) { s.x += s.vx * k; s.y += s.vy * k; s.life -= 0.045 * k; }
+    sparks = sparks.filter((s) => s.life > 0);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const d of dots) {
+      const a = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(d.tw));
+      // white when idle, accent blue when hot
+      const r = Math.round(255 - 108 * d.heat), g = Math.round(255 - 58 * d.heat), b = Math.round(255 - 2 * d.heat);
+      ctx.fillStyle = `rgba(${r},${g},${b},${a * 0.18})`;
+      ctx.beginPath(); ctx.arc(d.x, d.y, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+      ctx.beginPath(); ctx.arc(d.x, d.y, 1.4, 0, Math.PI * 2); ctx.fill();
+    }
+    for (const s of sparks) {
+      ctx.fillStyle = `rgba(147,197,253,${s.life})`;
+      ctx.fillRect(s.x - 1, s.y - 1, 2, 2);
+    }
+  }
+
+  function frame(t) {
+    const k = last === null ? 1 : Math.min(2, (t - last) / (1000 / 60));
+    last = t;
+    step(k); draw();
+    raf = requestAnimationFrame(frame);
+  }
+  function run() {
+    if (raf !== null) cancelAnimationFrame(raf);
+    raf = null; last = null;
+    if (!document.hidden && !still) raf = requestAnimationFrame(frame);
+  }
+
+  const where = (e) => { const r = bar.getBoundingClientRect(); px = e.clientX - r.left; py = e.clientY - r.top; };
+  bar.addEventListener('pointermove', (e) => { where(e); hot = true; });
+  bar.addEventListener('pointerdown', (e) => { where(e); hot = true; });
+  bar.addEventListener('pointerleave', () => { hot = false; });
+  bar.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') setTimeout(() => { hot = false; }, 900); });
+  bar.querySelectorAll('.nav-links a').forEach((a) => a.addEventListener('click', () => {
+    try { sessionStorage.setItem('dotsFrom', a.getAttribute('href')); } catch (e) {}
+  }));
+
+  seed();
+  new ResizeObserver(size).observe(bar);
+  document.addEventListener('visibilitychange', run);
+  if (still) draw(); else run();
+})();
