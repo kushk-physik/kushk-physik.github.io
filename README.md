@@ -1,6 +1,6 @@
 # kushk-physik.github.io
 
-Personal academic website of **Khwahish Kushwah**, theoretical nuclear physicist
+Personal academic website of **Khwahish Kushwah**, theoretical physicist
 (relativistic magnetohydrodynamics from kinetic theory, heavy-ion collisions, magnetized astrophysical plasmas).
 
 Live at [kushk-physik.github.io](https://kushk-physik.github.io)
