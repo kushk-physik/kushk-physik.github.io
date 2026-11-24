@@ -190,6 +190,8 @@ img { display: block; max-width: 100%; }
 .cv-row { display: grid; grid-template-columns: 130px 1fr; gap: 20px; font-size: 0.95rem; line-height: 1.55; }
 .when { color: var(--faint); font-weight: 600; font-size: 0.88rem; }
 .cv-row .muted { font-size: 0.9rem; }
+.cv-bullets { margin: 6px 0 0; padding-left: 1.15em; display: grid; gap: 5px; color: #c9d2e6; font-size: 0.92rem; line-height: 1.55; }
+.cv-bullets li::marker { color: var(--faint); }
 
 /* ---------- FOOTER ---------- */
 .footer { padding: 36px 16px 44px; text-align: center; color: #cbd5e1; font-size: 0.85rem; }
