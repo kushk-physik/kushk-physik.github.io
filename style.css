@@ -195,6 +195,14 @@ img { display: block; max-width: 100%; }
 .footer { padding: 36px 16px 44px; text-align: center; color: #cbd5e1; font-size: 0.85rem; }
 
 /* ---------- RESPONSIVE ---------- */
+@media (max-width: 1180px) {
+  .profile { gap: 20px; }
+  .avatar { width: 120px; height: 120px; }
+  .socials { gap: 6px; }
+  .socials a { width: 36px; height: 36px; }
+  .socials svg { width: 17px; height: 17px; }
+  .socials .txt { font-size: 0.78rem; }
+}
 @media (max-width: 1080px) {
   .nav-links a { padding: 6px 7px; font-size: 0.86rem; }
 }
